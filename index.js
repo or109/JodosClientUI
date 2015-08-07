@@ -49,8 +49,8 @@ var favorite = require('./favorite');
 var FACEBOOK_APP_ID = "965716803449159"; //"855929681108893"
 var FACEBOOK_APP_SECRET = "89eefbbb5531bf775356847efb4126ba"; //"6cfb0b86b713ad134a7af729e871aba3";
 
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/Final');
+//var mongoose = require('mongoose');
+//mongoose.connect('mongodb://localhost/Final');
 
 passport.serializeUser(function(user, done) {
     done(null, user);
