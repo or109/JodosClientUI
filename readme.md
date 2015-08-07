@@ -6,12 +6,10 @@ add this to prefences > user setting
 	"highlight_line": true
 }
 
-
 CTRL+SHIFT+P
 
 add package control into your packages dir
 https://packagecontrol.io/Package%20Control.sublime-package
-
 
 add project from repos:
 - SublimeGit
@@ -19,7 +17,6 @@ add project from repos:
 - ConsoleWrap 
 - DocBlockr
 - Comment-Snippets
-
 
 TODO:
 
