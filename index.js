@@ -1,3 +1,4 @@
+
 var express = require('express'),
     passport = require('passport'),
     util = require('util'),
@@ -52,23 +53,29 @@ var FACEBOOK_APP_SECRET = "89eefbbb5531bf775356847efb4126ba"; //"6cfb0b86b713ad1
 //var mongoose = require('mongoose');
 //mongoose.connect('mongodb://localhost/Final');
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
     done(null, user);
 });
 
-passport.deserializeUser(function(obj, done) {
+passport.deserializeUser(function (obj, done) {
     done(null, obj);
 });
 
+//var fb_profileFields = fb_profileFields || {};
+//var fb_profileFields = ['id', 'profileUrl', 'displayName'];
+//'name.familyName', 'name.givenName', 'name.middleName'
+var fb_profileFields =
+['id', 'displayName', 'gender', 'profileUrl', 'emails','picture'];
 
 passport.use(new FacebookStrategy({
-        clientID: FACEBOOK_APP_ID,
-        clientSecret: FACEBOOK_APP_SECRET,
-        callbackURL: "http://localhost:3000/auth/facebook/callback"
-    },
-    function(accessToken, refreshToken, profile, done) {
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:3000/auth/facebook/callback",
+    profileFields: fb_profileFields
+},
+    function (accessToken, refreshToken, profile, done) {
         // asynchronous verification, for effect...
-        process.nextTick(function() {
+        process.nextTick(function () {
 
             // To keep the example simple, the user's Facebook profile is returned to
             // represent the logged-in user.  In a typical application, you would want
@@ -78,7 +85,7 @@ passport.use(new FacebookStrategy({
             return done(null, profile);
         });
     }
-));
+    ));
 
 app.use(logger());
 app.use(cookieParser());
@@ -114,7 +121,7 @@ function ensureAuthenticated(req, res, next) {
 //   redirect the user back to this application at /auth/facebook/callback
 app.get('/auth/facebook',
     passport.authenticate('facebook'),
-    function(req, res) {
+    function (req, res) {
         // The request will be redirected to Facebook for authentication, so this
         // function will not be called.
     });
@@ -128,34 +135,35 @@ app.get('/auth/facebook/callback',
     passport.authenticate('facebook', {
         failureRedirect: '/login'
     }),
-    function(req, res) {
+    function (req, res) {
         console.log("login successfully!");
-        //console.log(req.user);
+        console.log(req.user);
         res.redirect('/');
-    });
+    }
+    );
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 
 });
 
-app.get('/search=:id', function(req, res) {
+app.get('/search=:id', function (req, res) {
     var id = parseInt(req.params.id);
     var searchText = 'iphone';
 
     res.sendFile(__dirname + '/search.html');
 });
 
-app.post('/api/items/guid', function(req, res) {
+app.post('/api/items/guid', function (req, res) {
     //res.sendFile(__dirname + '/index1.html');
     var myGUID = guid.raw();
-   // console.log('genrate new guid - ' + myGUID);
+    // console.log('genrate new guid - ' + myGUID);
 
     res.end(myGUID);
 
 });
 
-app.post('/api/items', function(req, res) {
+app.post('/api/items', function (req, res) {
     //var searchText = req.body.searchtext;
     //var guid = req.body.guid;
 
@@ -171,7 +179,7 @@ app.post('/api/items', function(req, res) {
 
     //console.log('SearchTExt - ' + ebayText);
 
-    ebaySearch(ebayText, res, function(data) {
+    ebaySearch(ebayText, res, function (data) {
         res.jsonp(data);
     });
 
@@ -180,7 +188,7 @@ app.post('/api/items', function(req, res) {
 
 
 
-app.post('/api/items/google', function(req, res) {
+app.post('/api/items/google', function (req, res) {
 
     var searchtext = req.body.searchtext;
     var imgUrl = req.body.imgUrl;
@@ -193,7 +201,7 @@ app.post('/api/items/google', function(req, res) {
 
 });
 
-app.post('/api/favorite/add', function(req, res) {
+app.post('/api/favorite/add', function (req, res) {
 
     if (req.isAuthenticated()) {
         var searchtext = req.body.searchtext;
@@ -209,13 +217,13 @@ app.post('/api/favorite/add', function(req, res) {
             UserId: req.user.id
         });
 
-        tempFavo.save(function(results) {
+        tempFavo.save(function (results) {
             res.json({});
         });
     }
 });
 
-app.post('/api/favorite/update', function(req, res) {
+app.post('/api/favorite/update', function (req, res) {
 
 
     var id = req.body.id;
@@ -224,12 +232,12 @@ app.post('/api/favorite/update', function(req, res) {
     favorite.update({
         _id: id
     }, {
-        $set: {
-            Desc: description
-        }
-    }, function(err) {
-        console.log(err);
-    });
+            $set: {
+                Desc: description
+            }
+        }, function (err) {
+            console.log(err);
+        });
 
 
 
@@ -237,13 +245,13 @@ app.post('/api/favorite/update', function(req, res) {
 });
 
 
-app.get('/api/favorite', function(req, res) {
+app.get('/api/favorite', function (req, res) {
 
     if (req.isAuthenticated()) {
 
         favorite.find({
             UserId: req.user.id
-        }, function(err, results) {
+        }, function (err, results) {
             res.json(results);
         });
     }
@@ -251,34 +259,34 @@ app.get('/api/favorite', function(req, res) {
 
 });
 
-app.get('/api/favorite/group', function(req, res) {
+app.get('/api/favorite/group', function (req, res) {
 
     if (req.isAuthenticated()) {
 
         favorite.aggregate({
-                $group: {
-                    _id: '$UserId',
-                    total_favorites: {
-                        $sum: 1
-                    }
+            $group: {
+                _id: '$UserId',
+                total_favorites: {
+                    $sum: 1
                 }
-            },
-            function(err, results) {
+            }
+        },
+            function (err, results) {
                 res.json(results);
             }
-        );
+            );
     }
 
 
 });
 
-app.post('/api/favorite/delete', function(req, res) {
+app.post('/api/favorite/delete', function (req, res) {
 
     if (req.isAuthenticated()) {
         var id = req.body.id;
         favorite.remove({
             _id: id
-        }, function(err, results) {
+        }, function (err, results) {
             res.json({});
         });
     }
@@ -343,12 +351,12 @@ function googleSearch22(searchtext, cb) {
             start: i * 10,
             num: 10,
             fields: "items/link"
-        }, function(error, response) {
+        }, function (error, response) {
             // console.log(response.items);
 
 
             count++;
-            response.items.forEach(function(entity) {
+            response.items.forEach(function (entity) {
                 allUrls.push(entity.link);
                 //  console.log('count=' + count + ' - ' + allUrls.length + '# - ' + entity.link);
             });
@@ -367,7 +375,7 @@ function googleSearch1(searchtext, start, cb) {
         start: start,
         num: 10,
         fields: "items/link"
-    }, function(error, response) {
+    }, function (error, response) {
 
         //console.log(response);
         return cb(response);
@@ -384,7 +392,7 @@ function ebaySearch(searchtext, res, cb) {
         'keywords': searchtext
     }
 
-    ebay.get('finding', params, function(err, data) {
+    ebay.get('finding', params, function (err, data) {
         if (err) {
             res.status(500).send('Something broke!');
             return;
@@ -397,7 +405,7 @@ function ebaySearch(searchtext, res, cb) {
             var items = data.findItemsByKeywordsResponse[0].searchResult[0].item;
             var curItem;
 
-            items.forEach(function(entity) {
+            items.forEach(function (entity) {
                 curItem = {};
 
                 curItem.ItemUrl = entity.viewItemURL[0];
@@ -421,7 +429,7 @@ function ebaySearch(searchtext, res, cb) {
 
 
 
-app.get('/getLoginUser', function(req, res) {
+app.get('/getLoginUser', function (req, res) {
     if (req.isAuthenticated()) {
         res.jsonp({
             "user": req.user
@@ -431,13 +439,13 @@ app.get('/getLoginUser', function(req, res) {
     }
 });
 
-app.get('/getebay', function(req, res) {
+app.get('/getebay', function (req, res) {
     res.header('Content-type', 'application/json');
     res.header('Charset', 'utf8');
 
     //res.jsonp(ebaySearch('iphone',null));
 
-    ebaySearch('iphone', function(data) {
+    ebaySearch('iphone', function (data) {
         // console.log(data);
         res.jsonp(data);
     });
@@ -446,7 +454,7 @@ app.get('/getebay', function(req, res) {
 });
 
 
-app.get('/endpoint', function(req, res) {
+app.get('/endpoint', function (req, res) {
     var obj = {};
     obj.title = 'koko';
     obj.data = 'mamama';
@@ -463,11 +471,11 @@ app.get('/endpoint', function(req, res) {
 
 
 
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {
     //  socketGlobal.push(socket);
     console.log('user connected - socket saved - ' + socket);
 
-    socket.on('disconnect', function(socket) {
+    socket.on('disconnect', function (socket) {
         //   socketGlobal.pop(socket);
         // console.log(socketGlobal);
         //console.log(socket);
@@ -502,9 +510,9 @@ io.on('connection', function(socket) {
     });
 
 
-    socket.on('newSearch', function(mySearch) {
+    socket.on('newSearch', function (mySearch) {
 
-        if (mySearch.txt === undefined) {} else {
+        if (mySearch.txt === undefined) { } else {
             console.log('old GUIDD was - ' + mySearch.guid);
             console.log(Object.keys(socketGlobal).length);
             //  socketGlobal.pop(mySearch.guid);
@@ -521,9 +529,9 @@ io.on('connection', function(socket) {
             // console.log(socketGlobal);
             //console.log(socketGlobal.length);
 
-            Search.getResultsFromGoogle(mySearch.txt, 5, function(data) {
-                push.connect('TEST1', function() {
-                    data.forEach(function(item) {
+            Search.getResultsFromGoogle(mySearch.txt, 5, function (data) {
+                push.connect('TEST1', function () {
+                    data.forEach(function (item) {
                         var obj = {};
 
                         obj.Url = item;
@@ -541,9 +549,9 @@ io.on('connection', function(socket) {
 
 });
 
-app.get('/emit', function(req, res) {
+app.get('/emit', function (req, res) {
     console.log('num of online clients - ' + socketGlobal.length);
-    socketGlobal.forEach(function(entry) {
+    socketGlobal.forEach(function (entry) {
         entry.emit('chat message', [{
             Name: 'fdsfs',
             ImageUrl: 'http://st1.foodsd.co.il/Images/Products/large/hagiSJ2GI3.jpg',
@@ -558,7 +566,7 @@ app.get('/emit', function(req, res) {
     res.end('emit to clients - ' + socketGlobal.length);
 });
 
-app.get('/status', function(req, res) {
+app.get('/status', function (req, res) {
     /*res.jsonp(Object.values(socketGlobal));
     console.log(Object.keys(socketGlobal));
     res.end();
@@ -567,7 +575,7 @@ app.get('/status', function(req, res) {
 
 app.set('port', (process.env.PORT || 3000));
 
-server.listen(app.get('port'), function() {
+server.listen(app.get('port'), function () {
     console.log("Started on PORT 3000");
 })
 

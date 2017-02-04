@@ -1,0 +1,138 @@
+<html class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths">
+
+<head>
+    <style type="text/css">
+    @charset "UTF-8";
+    [ng\:cloak],
+    [ng-cloak],
+    [data-ng-cloak],
+    [x-ng-cloak],
+    .ng-cloak,
+    .x-ng-cloak,
+    .ng-hide:not(.ng-hide-animate) {
+        display: none !important;
+    }
+    
+    ng\:form {
+        display: block;
+    }
+    
+    .ng-animate-shim {
+        visibility: hidden;
+    }
+    
+    .ng-anchor {
+        position: absolute;
+    }
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>התחברות למערכת</title>
+    <link rel="shortcut icon" type="image/ico" href="/Images/favicon.png">
+    <link href="/Content/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/Content/Site.css" rel="stylesheet" type="text/css">
+    <script src="/Scripts/modernizr-2.6.2.js"></script>
+    <script src="/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="/Scripts/jquery-ui.min.js"></script>
+    <link href="/Content/jquery-ui.min.css" rel="stylesheet">
+    <script src="/Scripts/general.js"></script>
+    <script src="/Scripts/angular.min.js"></script>
+    <script src="/Scripts/date-picker-he.js"></script>
+    <link href="/Content/jquery-ui.theme.min.css" rel="stylesheet">
+    <script src="/Scripts/jquery-ui-timepicker-addon.min.js"></script>
+    <link href="/Content/jquery-ui-timepicker-addon.min.css" rel="stylesheet">
+    <script>
+    var main_item_id_class = "Main_item_id";
+    var guest_name_class = "Guest_name";
+    var guest_number_class = "Guest_num";
+    var guest_team_class = "Guest_team";
+    var guest_remark_class = "Guest_remark";
+    var arrival_remark_class = "Arrival_remark";
+    var arrival_number_class = "Arrival_number";
+
+    var ajaxUrl = '/Ajax/';
+
+    var loading_img_html = '<img class="loading-img" src="/Images/loading.gif" />';
+    </script>
+</head>
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="http://wedplan.nsok.co.il/" class="logo">
+                    <img src="/Images/TopsitWedPlan.png">
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://topsit.co.il/">לאתר טופסיט</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        <h2>התחברות למערכת.</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <section id="loginForm">
+                    <form action="/Account/Login?ReturnUrl=%2F" class="form-horizontal" method="post" role="form" novalidate="novalidate">
+                        <input name="__RequestVerificationToken" type="hidden" value="0bTJVymRBCghh9TNHLiRSzs6jns0PQVjdG-Y-PkDznwQTztzINYFGvdzts47mA9Kv2mKm8sPQUDxHY9b_2g0Mnu2-yvRiKFNKr4A7u46TfA1">
+                        <h4>הכנס דוא"ל וסיסמא כדי להתחבר למערכת</h4>
+                        <hr>
+                        <div class="validation-summary-errors text-danger">
+                            <ul>
+                                <li>שם משתמש ו\או סיסמא אינם נכונים</li>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="Email">דוא"ל</label>
+                            <div class="col-md-10">
+                                <input class="form-control" data-val="true" data-val-email="The דוא&quot;ל field is not a valid e-mail address." data-val-required="The דוא&quot;ל field is required." id="Email" name="Email" type="text" value="aaa@fdd.com">
+                                <span class="field-validation-valid text-danger" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="Password">סיסמא</label>
+                            <div class="col-md-10">
+                                <input class="form-control" data-val="true" data-val-required="The סיסמא field is required." id="Password" name="Password" type="password">
+                                <span class="field-validation-valid text-danger" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-pull-2 col-md-10">
+                                <div class="checkbox">
+                                    <input data-val="true" data-val-required="The זכור אותי? field is required." id="RememberMe" name="RememberMe" type="checkbox" value="true">
+                                    <input name="RememberMe" type="hidden" value="false">
+                                    <label for="RememberMe">זכור אותי?</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-pull-2 col-md-10">
+                                <input type="submit" value="התחבר" class="btn btn-default">
+                            </div>
+                        </div>
+                        <p>
+                        </p>
+                    </form>
+                </section>
+            </div>
+        </div>
+        <hr>
+        <footer>
+            <p>© 2017 - Nsok - topsit</p>
+        </footer>
+    </div>
+    <script src="/bundles/jqueryval?v=NOVQDySGO89wzMzO5x7mWS4C_uAdynpZe_Lk2y-xEM41"></script>
+    <script src="/Scripts/jquery.validate.min.js"></script>
+    <script src="/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+</body>
+
+</html>
